@@ -1,0 +1,52 @@
+[versions]
+appcompat = "1.3.1"
+core = "1.9.0"
+gson = "2.9.1"
+retrofit = "2.9.0"
+koin_android_version = "3.3.0"
+koin_version = "3.2.2"
+compose_ui = "1.3.2"
+compose_runtime = "1.3.2"
+compose_material = "1.3.1"
+compose_foundation = "1.3.1"
+compose_viewmodel = "2.5.1"
+
+gradleplugin = "7.4.0-beta05"
+kotlin = "1.7.20"
+
+[libraries]
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-core = { module = "androidx.core:core-ktx", version.ref = "core" }
+compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose_runtime"}
+compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose_ui"}
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose_ui"}
+compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose_foundation"}
+compose-foundation-layout = { module = "androidx.compose.foundation:foundation-layout", version.ref = "compose_foundation"}
+compose-material = { module = "androidx.compose.material:material", version.ref = "compose_material"}
+compose-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "compose_viewmodel"}
+compose-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose_ui"}
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin_version" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin_android_version" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+junit = "junit:junit:4.13.2"
+android-test-junit4 = "androidx.test.ext:junit:1.1.4"
+test-espresso = "androidx.test.espresso:espresso-core:3.5.0"
+constraint-layout = "androidx.constraintlayout:constraintlayout:2.1.4"
+picasso = "com.squareup.picasso:picasso:2.71828"
+material = 'com.google.android.material:material:1.7.0'
+view-binding = 'com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6'
+logging-interceptor = "com.squareup.okhttp3:logging-interceptor:4.9.3"
+splash-screen = "androidx.core:core-splashscreen:1.0.0"
+
+[bundles]
+compose = ["compose-runtime", "compose-ui", "compose-ui-tooling", "compose-foundation", "compose-foundation-layout", "compose-material", "compose-viewmodel", "compose-preview"]
+koin = ["koin-core", "koin-android"]
+retrofit = ["retrofit", "converter-gson"]
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "gradleplugin" }
+android-library = { id = "com.android.library", version.ref = "gradleplugin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
