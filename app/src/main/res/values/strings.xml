@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">AndroidBooknomy</string>
+    <string name="ilovaga_otish">Ilovaga o\'tish</string>
+    <string name="kirish_btn">Kirish</string>
+    <string name="onboarding_content1">Chet tilini o\'rganishda Siznig ishonchli yordamchingiz</string>
+    <string name="onboarding_content2">Booknomy Sizni zeriktirmaslik sababli ingliz tilini o\'rganish uchun eng qiziqarli materiallarni tayyorlagan</string>
+    <string name="enter_phone_num">Telefon raqamingizni kiriting:</string>
+    <string name="register_btn">Ro\'yxatdan o\'tish</string>
+    <string name="booknomy_books">Booknomy kitoblari</string>
+    <string name="barchasi">Barchasi</string>
+    <string name="news_text">Yangiliklar</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="enter_phone">Telefon raqamingizni kiriting:</string>
 </resources>

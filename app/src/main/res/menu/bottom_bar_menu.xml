@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/ic_home"
+        android:icon="@drawable/ic_home"
+        android:title="home_fr" />
+    <item
+        android:id="@+id/ic_books"
+        android:icon="@drawable/ic_book"
+        android:title="books_fr" />
+    <item
+        android:id="@+id/c_home"
+        android:icon="@drawable/ic_headphones"
+        android:title="library_fr" />
+    <item
+        android:id="@+id/ic_entertainment"
+        android:icon="@drawable/grid_ic"
+        android:title="entertainment_fr" />
+</menu>
