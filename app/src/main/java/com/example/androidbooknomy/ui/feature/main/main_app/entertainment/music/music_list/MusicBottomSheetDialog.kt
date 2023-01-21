@@ -32,6 +32,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 class MusicBottomSheetDialog : BottomSheetDialogFragment() {
 
     private lateinit var musicItem: MusicItem
+    private lateinit var exoPlayer: ExoPlayer
 
     companion object {
         const val TAG = "ModalBottomSheet"
@@ -52,9 +53,25 @@ class MusicBottomSheetDialog : BottomSheetDialogFragment() {
 
         musicItem = arguments?.getParcelable("musicItem")!!
 
+        exoPlayer = ExoPlayer.Builder(context)
+            .build()
+            .also { exoPlayer ->
+                val mediaItem = MediaItem.Builder()
+                    .setUri(musicItem.music.musicUrl)
+                    .build()
+                exoPlayer.setMediaItem(mediaItem)
+                exoPlayer.prepare()
+                exoPlayer.play()
+            }
+
         setContent {
             MainScreen(musicItem = musicItem)
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        exoPlayer.pause()
     }
 
     @Composable
@@ -80,40 +97,21 @@ class MusicBottomSheetDialog : BottomSheetDialogFragment() {
                     modifier = Modifier.padding(10.dp)
                 )
             }
-            WithExoPlayer(
-                musicUrl = musicItem.music.musicUrl,
-                modifier = Modifier.align(Alignment.BottomStart)
-            )
+            AndroidView(factory = {
+                PlayerControlView(requireContext()).apply {
+                    this.player = exoPlayer
+                    this.showTimeoutMs = 0
+                }
+            }, modifier = Modifier.align(Alignment.BottomStart))
         }
 //            Column(Modifier.verticalScroll(rememberScrollState())) {
 //                Text(text = musicItem.fileText.fileUrl)
 //            }
     }
-}
 
-@Composable
-private fun WithExoPlayer(musicUrl: String, modifier: Modifier) {
-    val context = LocalContext.current
-    val exoPlayer =
-        ExoPlayer.Builder(context)
-            .build()
-            .also { exoPlayer ->
-                val mediaItem = MediaItem.Builder()
-                    .setUri(musicUrl)
-                    .build()
-                exoPlayer.setMediaItem(mediaItem)
-                exoPlayer.prepare()
-                exoPlayer.play()
-            }
-    Box(modifier = modifier) {
-        AndroidView(
-            factory = {
-                PlayerControlView(context).apply {
-                    this.player = exoPlayer
-                    this.showTimeoutMs = 0
-                }
-            },
-        )
+    override fun onDestroyView() {
+        super.onDestroyView()
+        exoPlayer.release()
     }
 }
 
