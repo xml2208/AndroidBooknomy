@@ -7,15 +7,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.androidbooknomy.R
+import com.example.androidbooknomy.data.storage.Prefs
 import com.example.androidbooknomy.databinding.ActivityLoginBinding
+import com.example.androidbooknomy.ui.feature.main.MainActivity
+import org.koin.android.ext.android.inject
 
 class LoginActivity : AppCompatActivity() {
 
-    private val binding by viewBinding(ActivityLoginBinding::bind)
+    private val prefs by inject<Prefs>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if(prefs.isLoggedIn) { startActivity(MainActivity.getStartIntent(this@LoginActivity)) }
         super.onCreate(savedInstanceState)
-
         installSplashScreen()
         setContentView(R.layout.activity_login)
 
@@ -26,7 +29,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun initAuthScreen() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.main_fragment_container, EntryFragment())
+            .replace(R.id.login_activity_fragment, EntryFragment())
             .commitNow()
     }
 

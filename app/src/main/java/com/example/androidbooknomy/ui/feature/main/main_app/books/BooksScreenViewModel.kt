@@ -21,6 +21,7 @@ class BooksScreenViewModel(private val booksRepository: MainAppRepository) :
             e.printStackTrace()
         }
     }
+
     override fun setInitialState(): BooksScreenContract.BooksScreenState =
         BooksScreenContract.BooksScreenState(
             isLoading = false,
@@ -29,15 +30,18 @@ class BooksScreenViewModel(private val booksRepository: MainAppRepository) :
         )
 
     override fun handleEvents(event: BooksScreenContract.Event) {
-        when (event) {
-            BooksScreenContract.Event.OnBookItemClicked -> setEffect {
-                BooksScreenContract.Effect.Navigation.MoveToPaymentScreen
-            }
-            BooksScreenContract.Event.OnAudioBooksClicked -> setEffect {
-                BooksScreenContract.Effect.Navigation.OpenAudioBooksScreen
-            }
-            BooksScreenContract.Event.OnIntensiveBooksClicked -> setEffect {
-                BooksScreenContract.Effect.Navigation.OpenIntensiveBooksScreen
+        for (i in responseBooks.value?.booksList ?: emptyList()) {
+            when (event) {
+                BooksScreenContract.Event.OnBookItemClicked(i) -> setEffect {
+                    BooksScreenContract.Effect.Navigation.MoveToPaymentScreen
+                }
+                BooksScreenContract.Event.OnAudioBooksClicked -> setEffect {
+                    BooksScreenContract.Effect.Navigation.OpenAudioBooksScreen
+                }
+                BooksScreenContract.Event.OnIntensiveBooksClicked -> setEffect {
+                    BooksScreenContract.Effect.Navigation.OpenIntensiveBooksScreen
+                }
+                else -> {}
             }
         }
     }

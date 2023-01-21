@@ -33,6 +33,12 @@
             android:theme="@style/Theme.AndroidBooknomy.NoActionBar">
         </activity>
 
+        <activity
+            android:name=".ui.feature.login.RegisterActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AndroidBooknomy.NoActionBar">
+        </activity>
+
     </application>
 
 </manifest>

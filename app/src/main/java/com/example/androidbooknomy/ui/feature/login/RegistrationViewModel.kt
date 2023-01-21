@@ -1,15 +1,16 @@
 package com.example.androidbooknomy.ui.feature.login
 
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.lifecycle.viewModelScope
+import com.example.androidbooknomy.data.storage.Prefs
 import com.example.androidbooknomy.network.ApiClient
 import com.example.androidbooknomy.ui.base.BaseViewModel
 import kotlinx.coroutines.launch
 
-class RegistrationViewModel(private val apiClient: ApiClient) :
+class RegistrationViewModel(
+    private val apiClient: ApiClient,
+    private val prefs: Prefs
+) :
     BaseViewModel<RegistrationContract.State, RegistrationContract.Event, RegistrationContract.Effect>() {
 
     var phoneNumber by mutableStateOf("")
@@ -22,7 +23,8 @@ class RegistrationViewModel(private val apiClient: ApiClient) :
 
     var isCodeValid by mutableStateOf(false)
         private set
-    val phoneNumberIncorrect: Boolean by derivedStateOf {
+
+    val phoneNumberIsCorrect: Boolean by derivedStateOf {
         phoneNumber.count() == 13 && phoneNumber.first() == '+'
     }
 
@@ -61,16 +63,24 @@ class RegistrationViewModel(private val apiClient: ApiClient) :
         }
     }
 
-    fun checkCodeIsValid() {
-        try {
-            viewModelScope.launch {
-//                if (apiClient.approveUser(phoneNumber, code).getBoolean("success")) {
-                apiClient.approveUser(phoneNumber, code)
-                    isCodeValid = true
+    fun saveToken(num:String, code: String) {
+        viewModelScope.launch {
+            try {
+                prefs.saveToken(apiClient.approveUser(num, code)["token"] as String)
+            } catch(e:Exception) {
+                e.printStackTrace()
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
     }
+//    fun checkCodeIsValid() {
+//        try {
+//            viewModelScope.launch {
+//                _token.value = prefs.getToken
+//                Log.d("xml2208", "jsonObject: ${apiClient.approveUser(phoneNumber, code)["token"]}")
+//            }
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//    }
 
 }

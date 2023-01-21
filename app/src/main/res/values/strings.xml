@@ -9,7 +9,7 @@
     <string name="booknomy_books">Booknomy kitoblari</string>
     <string name="barchasi">Barchasi</string>
     <string name="news_text">Yangiliklar</string>
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login">AndroidBooknomy</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -19,4 +19,12 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="enter_phone">Telefon raqamingizni kiriting:</string>
+    <string name="about_syujed">Syujet haqida</string>
+    <string name="listen_and">Eshiting va kuzatib \n boring</string>
+    <string name="my_library">Mening kutubxonam</string>
+    <string name="no_books">Kitoblar mavjud emas</string>
+    <string name="home_fr">home_fr</string>
+    <string name="books_fr">books_fr</string>
+    <string name="library_fr">library_fr</string>
+    <string name="entertainment_fr">entertainment_fr</string>
 </resources>

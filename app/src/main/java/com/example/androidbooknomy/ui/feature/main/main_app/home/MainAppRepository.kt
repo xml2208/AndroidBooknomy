@@ -5,9 +5,7 @@ import com.example.androidbooknomy.network.ApiClient
 class MainAppRepository(
     private val api: ApiClient
 ) {
-
     suspend fun getAllBooks() = api.getBooks()
+    suspend fun payment() = api.orderPay()
 
-//        val jsonArray = api.getBooks()
-//        return jsonArray.getJSONArray("data").toBooks()
 }

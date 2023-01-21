@@ -22,19 +22,27 @@ abstract class ComposeFragment<State : CoreState, Event : CoreEvent, Effect : Co
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeEffects()
+        observeAlbumId()
+    }
+
     private fun observeEffects() {
         viewLifecycleOwner.lifecycleScope.launch {
-            retrieveViewModel().effect.collect() {
-                    handleEffect(it)
+            retrieveViewModel().effect.collect {
+                handleEffect(it)
             }
         }
     }
-
+    protected open fun observeAlbumId() {}
     abstract fun retrieveViewModel(): BaseViewModel<State, Event, Effect>
 
     @Composable
     abstract fun FragmentContent()
 
     protected open fun handleEffect(effect: Effect) {}
+
     protected open fun externalObservers() {}
+
 }

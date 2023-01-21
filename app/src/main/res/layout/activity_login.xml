@@ -1,40 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.feature.login.LoginActivity">
 
     <FrameLayout
-        android:id="@+id/main_fragment_container"
+        android:id="@+id/login_activity_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-<!--    <ImageView-->
-<!--        android:id="@+id/top_logo"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:src="@drawable/top_logo" />-->
-<!--    <Button-->
-<!--        android:id="@+id/movetoApp"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:elevation="20dp"-->
-<!--        android:background="null"-->
-<!--        android:layout_centerInParent="true"-->
-<!--        android:text="Ilovaga o'tish"-->
-<!--        android:textColor="@color/white"/>-->
-
-<!--    <Button-->
-<!--        android:id="@+id/kirish"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:elevation="20dp"-->
-<!--        android:background="null"-->
-<!--        android:layout_below="@+id/movetoApp"-->
-<!--        android:layout_centerHorizontal="true"-->
-<!--        android:text="Kirish"-->
-<!--        android:textColor="@color/white"/>-->
-
 
 </RelativeLayout>

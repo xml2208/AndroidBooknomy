@@ -1,29 +1,43 @@
 package com.example.androidbooknomy.network
 
-import okhttp3.Authenticator
-import okhttp3.Interceptor
-import okhttp3.Request
+import android.util.Log
+import com.example.androidbooknomy.data.storage.Prefs
+import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 
 val loggingInterceptor = HttpLoggingInterceptor().also {
     it.level = HttpLoggingInterceptor.Level.BODY
 }
 
-val headerInterceptor = Interceptor { chain ->
-    var request = chain.request()
-    request = request.newBuilder()
-        .addHeader("Content-Type", "application/json")
-        .addHeader("Accept", "application/json")
-        .build()
-
-    chain.proceed(request)
+class HeaderInterceptor : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        Log.d("ddk9499", "intercept: inside header interceptor")
+        val newRequest = chain.request()
+            .newBuilder()
+            .addHeader("ddk9499", "proverka")
+            .addHeader("Content-Type", "application/json")
+            .addHeader("Accept", "application/json")
+            .build()
+        Log.d("ddk9499", "intercept: $newRequest")
+        return chain.proceed(newRequest)
+    }
 }
 
-val authenticator = Authenticator { _, response ->
-    val requestAvailable: Request?
-//    val token = GithubApp.INSTANCE.prefs.token
-    requestAvailable = response.request.newBuilder()
-        .header("Authorization", "Bearer (token)")
-        .build()
-    requestAvailable
+val headerInterceptor = Interceptor { chain ->
+    return@Interceptor chain.proceed(
+        chain.request()
+            .newBuilder()
+            .addHeader("ddk9499", "proverka")
+            .addHeader("Content-Type", "application/json")
+            .addHeader("Accept", "application/json")
+            .build()
+    )
+}
+
+class AuthInterceptor(private val prefs: Prefs) : Authenticator {
+    override fun authenticate(route: Route?, response: Response): Request {
+        return response.request.newBuilder()
+            .addHeader("Authorization", "Bearer ${prefs.token}")
+            .build()
+    }
 }

@@ -26,34 +26,41 @@ class HomeScreenViewModel(
     override fun setInitialState(): HomeScreenContract.State =
         HomeScreenContract.State(
             booksList = emptyList(),
+            bookItem = null,
             errorMessage = null
         )
 
     override fun handleEvents(event: HomeScreenContract.Event) {
-        when (event) {
-            HomeScreenContract.Event.SeeNewsClicked -> setEffect {
-                HomeScreenContract.Effect.Navigation.MoveToAllNewsScreen
+        for (i in responseBooks.value!!.booksList) {
+            when (event) {
+                HomeScreenContract.Event.SeeNewsClicked -> setEffect {
+                    HomeScreenContract.Effect.Navigation.MoveToAllNewsScreen
+                }
+                HomeScreenContract.Event.SeeAllBooksClicked -> setEffect {
+                    HomeScreenContract.Effect.Navigation.MoveToBooksScreen
+                }
+                HomeScreenContract.Event.SeeAudioCoursesClicked -> setEffect {
+                    HomeScreenContract.Effect.Navigation.MoveToBookPaymentScreen
+                }
+                HomeScreenContract.Event.SeeBookClicked(i) -> setEffect {
+                    HomeScreenContract.Effect.Navigation.MoveToBookPaymentScreen
+                }
+                else -> {}
             }
-            HomeScreenContract.Event.SeeAllBooksClicked -> setEffect {
-                HomeScreenContract.Effect.Navigation.MoveToBooksScreen
-            }
-            HomeScreenContract.Event.SeeAudioCoursesClicked -> setEffect {
-                HomeScreenContract.Effect.Navigation.MoveToBookPaymentScreen
-            }
-            HomeScreenContract.Event.SeeBookClicked -> setEffect {
-                HomeScreenContract.Effect.Navigation.MoveToBookPaymentScreen
-            }
+
         }
     }
 
     private suspend fun getAllBooks() {
         responseBooks.value = booksRepo.getAllBooks()
-        setState { copy(booksList = responseBooks.value?.booksList ?: emptyList()) }
+        for(i in responseBooks.value!!.booksList) {
+            setState { copy(booksList = responseBooks.value?.booksList ?: emptyList(), bookItem = i) }
+        }
+//        setState { copy(booksList = responseBooks.value?.booksList ?: emptyList()) }
 //        response
 //            .subscribeOn(Schedulers.io())
 //            .observeOn(AndS)
 //            .subscribe(getBooksListObserver())
-
     }
 
     private fun getBooksListObserver(): Observer<BooksModel> {
@@ -68,7 +75,8 @@ class HomeScreenViewModel(
             }
 
             override fun onComplete() {
-                Log.d("homescreenvm", "onComplete: Completed")}
+                Log.d("xml2208", "onComplete: Completed")
+            }
 
             override fun onNext(t: BooksModel) {
                 setState { copy(booksList = t.booksList) }

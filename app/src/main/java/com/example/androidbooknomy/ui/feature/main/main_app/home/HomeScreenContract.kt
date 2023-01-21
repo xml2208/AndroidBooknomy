@@ -11,11 +11,12 @@ class HomeScreenContract {
         object SeeNewsClicked: Event()
         object SeeAllBooksClicked: Event()
         object SeeAudioCoursesClicked: Event()
-        object SeeBookClicked: Event()
+        data class SeeBookClicked(val bookModel: BookModel): Event()
     }
 
     data class State(
         val booksList: List<BookModel> = emptyList(),
+        val bookItem: BookModel? = null,
         val errorMessage: String? = null
     ): CoreState
 

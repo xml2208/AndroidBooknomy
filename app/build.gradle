@@ -1,6 +1,8 @@
 plugins {
     alias libs.plugins.android.application
     alias libs.plugins.kotlin.android
+    alias libs.plugins.kotlin.serialization.plugin
+    id 'kotlin-android-extensions'
 }
 
 android {
@@ -55,13 +57,21 @@ dependencies {
     implementation libs.bundles.koin
     implementation libs.koin.compose
 
+    //storage
+    implementation libs.preferences.datastore
+
     // Compose
     implementation libs.bundles.compose
     implementation libs.accompanist
     implementation libs.view.pager
     implementation libs.view.pager.indicator
     implementation libs.navigation.compose
-    implementation "com.google.android.material:compose-theme-adapter:1.2.1"
+    implementation libs.coil
+    implementation libs.coil.compose
+//    implementation libs.coil.transformation
+    implementation libs.compose.theme
+    implementation libs.exo.player
+    implementation libs.compose.view.binding
 
     //picasso
     implementation libs.picasso
@@ -71,6 +81,7 @@ dependencies {
     implementation libs.logging.interceptor
     implementation libs.gson
 
+//    implementation 'com.github.jeancsanchez:JcPlayer:2.7.2'
     //rxjava
     implementation libs.rxjava
 //    implementation libs.rxjava.android
@@ -78,6 +89,8 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
 
+    //serialization
+    implementation libs.kotlin.serialization
 
     testImplementation libs.junit
     androidTestImplementation libs.android.test.junit4

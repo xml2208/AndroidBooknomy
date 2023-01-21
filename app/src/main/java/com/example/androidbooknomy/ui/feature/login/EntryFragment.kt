@@ -1,5 +1,6 @@
 package com.example.androidbooknomy.ui.feature.login
 
+import android.content.Intent
 import android.support.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -22,14 +23,11 @@ import androidx.compose.ui.unit.sp
 import com.example.androidbooknomy.R
 import com.example.androidbooknomy.ui.base.ComposeFragment
 import com.example.androidbooknomy.ui.feature.main.MainActivity
-import com.example.androidbooknomy.utils.extension.replaceFragment
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EntryFragment() :
     ComposeFragment<RegistrationContract.State, RegistrationContract.Event, RegistrationContract.Effect>() {
-
-    private val viewModel by viewModel<RegistrationViewModel>()
     override fun retrieveViewModel(): RegistrationViewModel = getViewModel()
 
     @Composable
@@ -37,7 +35,8 @@ class EntryFragment() :
         EntryUi(
             background = R.drawable.bg_splash,
             topLogo = R.drawable.top_logo,
-            register = { activity?.replaceFragment(RegisterFragment(), R.id.main_fragment_container) },
+//            register = { activity?.replaceFragment(RegisterFragment(), R.id.main_fragment_container) },
+            register = { startActivity(Intent(requireActivity(), RegisterActivity::class.java)) },
             moveToApp = { startActivity(MainActivity.getStartIntent(requireActivity()))}
         )
     }
@@ -113,7 +112,7 @@ fun EntryUi(
     }
 }
 
-@Preview()
+@Preview
 @Composable
 fun EntryUiPreview() {
     EntryUi(R.drawable.bg_splash, R.drawable.top_logo, {}, {})

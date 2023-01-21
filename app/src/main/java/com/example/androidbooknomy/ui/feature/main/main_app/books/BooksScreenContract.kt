@@ -9,7 +9,7 @@ sealed class BooksScreenContract {
 
     sealed class Event: CoreEvent {
         object OnAudioBooksClicked: Event()
-        object OnBookItemClicked: Event()
+        data class OnBookItemClicked(val bookModel: BookModel): Event()
         object OnIntensiveBooksClicked: Event()
     }
 
