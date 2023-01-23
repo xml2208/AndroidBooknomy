@@ -65,14 +65,17 @@ class PaymentScreenFragment : Fragment() {
                     .background(Color.White)
             ) {
                 AppTopScreen(background = R.drawable.bg_splash) {
-                    MainPaymentPart(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp))
-                            .background(Color.White)
-                            .fillMaxSize()
-                            .padding(horizontal = 20.dp),
-                        bookModel = bookModel
-                    )
+                    Column {
+                        MainPaymentPart(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp))
+                                .background(Color.White)
+                                .fillMaxSize()
+                                .padding(horizontal = 20.dp),
+                            bookModel = bookModel
+                        )
+                        FactsInNumber()
+                    }
                 }
             }
         }
@@ -107,11 +110,8 @@ class PaymentScreenFragment : Fragment() {
                 )
                 Spacer(modifier = Modifier.weight(1f))
             }
-
-
-            Row(Modifier.fillMaxWidth().padding(10.dp)) {
+            Row(modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
                 CustomText(content = "Audio kurs narxi:")
-                Spacer(Modifier.weight(1f))
                 Text(
                     textDecoration = TextDecoration.LineThrough,
                     text = bookModel.price,
@@ -119,9 +119,8 @@ class PaymentScreenFragment : Fragment() {
                     fontSize = 18.sp
                 )
             }
-            Row {
+            Row(Modifier.fillMaxWidth().padding(vertical = 10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
                 CustomText(content = "40% chegirmada:")
-                Spacer(Modifier.weight(1f))
                 Text(
                     text = bookModel.salePrice.dropLast(2),
                     fontWeight = FontWeight.Bold,
@@ -129,9 +128,8 @@ class PaymentScreenFragment : Fragment() {
                     fontSize = 24.sp
                 )
             }
-            Row(modifier = Modifier.padding(10.dp)) {
+            Row(Modifier.fillMaxWidth().padding(vertical = 10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
                 CustomText(content = "Tejab qolasiz:")
-                Spacer(Modifier.weight(1f))
                 Text(text = bookModel.economyPrice, color = Color.Gray)
             }
             Row(Modifier.padding(15.dp)) {
@@ -148,7 +146,6 @@ class PaymentScreenFragment : Fragment() {
                 }
                 Spacer(modifier = Modifier.weight(1f))
             }
-
         }
     }
 
