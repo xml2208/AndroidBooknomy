@@ -20,6 +20,7 @@ navigation_compose = "2.5.3"
 rxjava = "2.2.21"
 rxjava_android = "2.2.21"
 serialization = "1.8.0"
+compose-constraint = "1.0.1"
 
 [libraries]
 
@@ -34,6 +35,7 @@ compose-foundation-layout = { module = "androidx.compose.foundation:foundation-l
 compose-material = { module = "androidx.compose.material:material", version.ref = "compose_material" }
 compose-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "compose_viewmodel" }
 compose-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose_ui" }
+compose-constraint-layout = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "compose-constraint"}
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin_version" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin_android_version" }
 koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin_version"}
@@ -65,7 +67,7 @@ kotlin-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
 #rxjava-android = { module = 'io.reactivex.rxjava3:rxandroid', version.ref = "rxjava_android"}
 
 [bundles]
-compose = ["compose-runtime", "compose-ui", "compose-ui-tooling", "compose-foundation", "compose-foundation-layout", "compose-material", "compose-viewmodel", "compose-preview", "compose-activity"]
+compose = ["compose-runtime", "compose-constraint-layout", "compose-ui", "compose-ui-tooling", "compose-foundation", "compose-foundation-layout", "compose-material", "compose-viewmodel", "compose-preview", "compose-activity"]
 koin = ["koin-core", "koin-android"]
 retrofit = ["retrofit", "converter-gson"]
 

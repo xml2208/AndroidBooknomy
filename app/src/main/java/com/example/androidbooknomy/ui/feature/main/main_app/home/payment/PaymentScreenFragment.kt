@@ -16,10 +16,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -64,15 +67,30 @@ class PaymentScreenFragment : Fragment() {
                     .verticalScroll(rememberScrollState())
                     .background(Color.White)
             ) {
-                AppTopScreen(background = R.drawable.bg_splash) {
+                AppTopScreen(background = R.drawable.bg_media_player) {
                     Column {
                         MainPaymentPart(
+                            bookModel = bookModel,
                             modifier = Modifier
-                                .clip(RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp))
-                                .background(Color.White)
                                 .fillMaxSize()
-                                .padding(horizontal = 20.dp),
-                            bookModel = bookModel
+                                .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
+                                .background(color = Color.White, shape = CustomShape())
+                                .drawBehind {
+                                    val path = Path().apply {
+                                        cubicTo(
+                                            x1 = 0F,
+                                            y1 = size.height,
+                                            x2 = size.width.times(-0.3F),
+                                            y2 = size.height.times(1.1F),
+                                            x3 = size.width,
+                                            y3 = size.height.times(0.8F)
+                                        )
+                                        lineTo(size.width, 0f)
+                                        close()
+                                    }
+                                    drawPath(path, Color.White)
+                                }
+                                .padding(20.dp)
                         )
                         FactsInNumber()
                     }
@@ -83,8 +101,7 @@ class PaymentScreenFragment : Fragment() {
 
     @Composable
     fun MainPaymentPart(
-        modifier: Modifier,
-        bookModel: BookModel
+        bookModel: BookModel, modifier: Modifier
     ) {
         Column(modifier = modifier) {
             Row {
@@ -110,8 +127,10 @@ class PaymentScreenFragment : Fragment() {
                 )
                 Spacer(modifier = Modifier.weight(1f))
             }
-            Row(modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                CustomText(content = "Audio kurs narxi:")
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+                CustomText(content = stringResource(R.string.cost_of_audio_course))
                 Text(
                     textDecoration = TextDecoration.LineThrough,
                     text = bookModel.price,
@@ -119,8 +138,11 @@ class PaymentScreenFragment : Fragment() {
                     fontSize = 18.sp
                 )
             }
-            Row(Modifier.fillMaxWidth().padding(vertical = 10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                CustomText(content = "40% chegirmada:")
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+                CustomText(content = stringResource(R.string.promotion_40_percent))
                 Text(
                     text = bookModel.salePrice.dropLast(2),
                     fontWeight = FontWeight.Bold,
@@ -128,11 +150,14 @@ class PaymentScreenFragment : Fragment() {
                     fontSize = 24.sp
                 )
             }
-            Row(Modifier.fillMaxWidth().padding(vertical = 10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                CustomText(content = "Tejab qolasiz:")
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+                CustomText(content = stringResource(R.string.economy_price))
                 Text(text = bookModel.economyPrice, color = Color.Gray)
             }
-            Row(Modifier.padding(15.dp)) {
+            Row(Modifier.padding(bottom = 25.dp)) {
                 Spacer(modifier = Modifier.weight(1f))
                 Button(
                     onClick = { onPayButtonClicked() },
@@ -142,10 +167,11 @@ class PaymentScreenFragment : Fragment() {
                     ),
                     contentPadding = PaddingValues(horizontal = 45.dp)
                 ) {
-                    Text(text = "Sotib olish")
+                    Text(text = stringResource(R.string.buy_button))
                 }
                 Spacer(modifier = Modifier.weight(1f))
             }
+            Box(modifier = Modifier.height(80.dp))
         }
     }
 

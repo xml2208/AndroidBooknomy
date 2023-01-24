@@ -97,12 +97,12 @@ class EntertainmentFragment : Fragment() {
         ) {
             TabRow(
                 selectedTabIndex = tabIndex,
+                backgroundColor = Color.White,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 20.dp),
                 indicator = { TabRowDefaults.Divider(thickness = 0.dp) },
                 divider = { Divider(Modifier.background(Color.White)) },
-                backgroundColor = Color.Transparent
             ) {
                 tabData.forEachIndexed { index, text ->
                     Tab(
@@ -184,6 +184,7 @@ class EntertainmentFragment : Fragment() {
 //                            albumId = albumItem.id
                             onAlbumSelected(albumItem)
                         }
+
                 )
             }
         }
@@ -191,7 +192,7 @@ class EntertainmentFragment : Fragment() {
 
     @Composable
     private fun MusicAlbumItem(musicAlbumItem: MusicAlbumItem, modifier: Modifier) {
-        Column(modifier = modifier) {
+        Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(musicAlbumItem.files.imageUrl)

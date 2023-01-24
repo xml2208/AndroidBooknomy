@@ -68,7 +68,6 @@ dependencies {
     implementation libs.navigation.compose
     implementation libs.coil
     implementation libs.coil.compose
-//    implementation libs.coil.transformation
     implementation libs.compose.theme
     implementation libs.exo.player
     implementation libs.compose.view.binding
