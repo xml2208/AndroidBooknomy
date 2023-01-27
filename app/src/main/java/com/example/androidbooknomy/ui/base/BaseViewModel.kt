@@ -41,8 +41,13 @@ abstract class BaseViewModel<UiState: CoreState, Event: CoreEvent, Effect: CoreE
     }
 
     protected fun setState(reducer: UiState.() -> UiState) {
-        val newState = viewState.value.reducer()
-        _viewState.value = newState
+        try {
+            val newState = viewState.value.reducer()
+            _viewState.value = newState
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
     }
 
     protected fun setEffect(builder: () -> Effect) {

@@ -14,11 +14,9 @@ class BooksScreenViewModel(private val booksRepository: MainAppRepository) :
     private val responseBooks = MutableStateFlow<BooksModel?>(null)
 
     init {
-        try {
+        viewModelScope.launch {
             Log.d("xml2208", "booksScreen: respone: ${responseBooks.value}")
             getAllBooks()
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
     }
 
@@ -46,8 +44,8 @@ class BooksScreenViewModel(private val booksRepository: MainAppRepository) :
         }
     }
 
-    private fun getAllBooks() {
-        viewModelScope.launch {
+    private suspend fun getAllBooks() {
+        try {
             responseBooks.value = booksRepository.getAllBooks()
             setState {
                 copy(
@@ -55,6 +53,9 @@ class BooksScreenViewModel(private val booksRepository: MainAppRepository) :
                     bookList = responseBooks.value?.booksList ?: emptyList()
                 )
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+
     }
 }

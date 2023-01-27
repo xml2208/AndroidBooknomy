@@ -35,10 +35,11 @@ import com.example.androidbooknomy.model.BookModel
 import com.example.androidbooknomy.ui.feature.main.AppTopScreen
 
 const val BOOK_MODEL_ID = "book_model"
+
 class PaymentScreenFragment : Fragment() {
 
-    private val SERVICE_ID = "18673"
-    private val MERCHANT_ID = "13335"
+    private val serviceId = "18673"
+    private val merchantId = "13335"
 
     private lateinit var bookModel: BookModel
 
@@ -73,17 +74,14 @@ class PaymentScreenFragment : Fragment() {
                             bookModel = bookModel,
                             modifier = Modifier
                                 .fillMaxSize()
-                                .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
+                                .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp, bottomStart = 30.dp))
                                 .background(color = Color.White, shape = CustomShape())
                                 .drawBehind {
                                     val path = Path().apply {
                                         cubicTo(
-                                            x1 = 0F,
-                                            y1 = size.height,
-                                            x2 = size.width.times(-0.3F),
-                                            y2 = size.height.times(1.1F),
-                                            x3 = size.width,
-                                            y3 = size.height.times(0.8F)
+                                            x1 = 0F, y1 = size.height.times(1.1f),
+                                            x2 = size.width.times(-0.32F), y2 = size.height.times(0.95F),
+                                            x3 = size.width, y3 = size.height.times(0.85F)
                                         )
                                         lineTo(size.width, 0f)
                                         close()
@@ -118,7 +116,9 @@ class PaymentScreenFragment : Fragment() {
             Row {
                 Spacer(modifier = Modifier.weight(1f))
                 AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current).placeholder(R.drawable.bg_media_player).data(bookModel.photo.photoUrl).build(),
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .placeholder(R.drawable.bg_media_player).data(bookModel.photo.photoUrl)
+                        .build(),
                     modifier = Modifier
                         .size(width = 150.dp, height = 220.dp)
                         .clip(RoundedCornerShape(8.dp)),
@@ -127,9 +127,11 @@ class PaymentScreenFragment : Fragment() {
                 )
                 Spacer(modifier = Modifier.weight(1f))
             }
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp), horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 CustomText(content = stringResource(R.string.cost_of_audio_course))
                 Text(
                     textDecoration = TextDecoration.LineThrough,
@@ -141,7 +143,8 @@ class PaymentScreenFragment : Fragment() {
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+                    .padding(vertical = 10.dp), horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 CustomText(content = stringResource(R.string.promotion_40_percent))
                 Text(
                     text = bookModel.salePrice.dropLast(2),
@@ -153,11 +156,12 @@ class PaymentScreenFragment : Fragment() {
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+                    .padding(vertical = 10.dp), horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 CustomText(content = stringResource(R.string.economy_price))
                 Text(text = bookModel.economyPrice, color = Color.Gray)
             }
-            Row(Modifier.padding(bottom = 25.dp)) {
+            Row(Modifier.padding(bottom = 100.dp)) {
                 Spacer(modifier = Modifier.weight(1f))
                 Button(
                     onClick = { onPayButtonClicked() },
@@ -171,7 +175,6 @@ class PaymentScreenFragment : Fragment() {
                 }
                 Spacer(modifier = Modifier.weight(1f))
             }
-            Box(modifier = Modifier.height(80.dp))
         }
     }
 
@@ -182,7 +185,7 @@ class PaymentScreenFragment : Fragment() {
 
     private fun onPayButtonClicked() {
         val url =
-            "https://my.click.uz/services/pay/?service_id=$SERVICE_ID&merchant_id=$MERCHANT_ID&amount=${
+            "https://my.click.uz/services/pay/?service_id=$serviceId&merchant_id=$merchantId&amount=${
                 bookModel.salePrice.dropLast(
                     2
                 )

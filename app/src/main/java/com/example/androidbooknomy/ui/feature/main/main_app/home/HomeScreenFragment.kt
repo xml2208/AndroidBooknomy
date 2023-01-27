@@ -1,6 +1,5 @@
 package com.example.androidbooknomy.ui.feature.main.main_app.home
 
-import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -54,6 +53,7 @@ class HomeScreenFragment :
 
     @Composable
     override fun FragmentContent() {
+
         HomeScreen(
             state = viewModel.viewState.value,
             onEventSent = { viewModel.setEvent(it) }
@@ -75,7 +75,6 @@ class HomeScreenFragment :
             }
         }
     }
-    @SuppressLint("NotConstructor")
     @Composable
     fun HomeScreen(
         state: HomeScreenContract.State,

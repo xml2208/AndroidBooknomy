@@ -88,6 +88,10 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
 
+
+    //lyricsView
+    implementation 'com.github.Moriafly:LyricViewX:1.2.1'
+
     //serialization
     implementation libs.kotlin.serialization
 

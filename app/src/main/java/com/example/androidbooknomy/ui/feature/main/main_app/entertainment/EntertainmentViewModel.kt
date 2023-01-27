@@ -21,15 +21,19 @@ class EntertainmentViewModel(private val api: ApiClient) : ViewModel() {
     val state: State<EntertainmentScreenState> = _state
 
     init {
-        getAll()
+        viewModelScope.launch {
+            getAll()
+        }
     }
 
-    private fun getAll() {
-        viewModelScope.launch {
+    private suspend fun getAll() {
+        try {
             _state.value = EntertainmentScreenState(
                 filmsState = EntertainmentScreenState.FilmsState(filmItems = api.getFilms().data),
                 musicState = EntertainmentScreenState.MusicAlbumState(albums = api.getMusicAlbum().data)
             )
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

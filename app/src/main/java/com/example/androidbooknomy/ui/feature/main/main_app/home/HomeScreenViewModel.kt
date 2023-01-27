@@ -52,9 +52,16 @@ class HomeScreenViewModel(
     }
 
     private suspend fun getAllBooks() {
-        responseBooks.value = booksRepo.getAllBooks()
-        for(i in responseBooks.value!!.booksList) {
-            setState { copy(booksList = responseBooks.value?.booksList ?: emptyList(), bookItem = i) }
+        try {
+            responseBooks.value = booksRepo.getAllBooks()
+            for (i in responseBooks.value!!.booksList) {
+                setState {
+                    copy(booksList = responseBooks.value?.booksList ?: emptyList(), bookItem = i)
+                }
+
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
 //        setState { copy(booksList = responseBooks.value?.booksList ?: emptyList()) }
 //        response

@@ -57,17 +57,21 @@ class RegistrationViewModel(
     }
 
     fun sendSmsToPhone() {
-        viewModelScope.launch {
-            apiClient.sendSmsToPhone(phoneNumber)
-            showCodeField = true
+        try {
+            viewModelScope.launch {
+                apiClient.sendSmsToPhone(phoneNumber)
+                showCodeField = true
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
-    fun saveToken(num:String, code: String) {
+    fun saveToken(num: String, code: String) {
         viewModelScope.launch {
             try {
                 prefs.saveToken(apiClient.approveUser(num, code)["token"] as String)
-            } catch(e:Exception) {
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }

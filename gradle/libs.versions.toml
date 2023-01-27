@@ -26,6 +26,7 @@ compose-constraint = "1.0.1"
 
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-core = { module = "androidx.core:core-ktx", version.ref = "core" }
+kotlin-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
 compose-activity = { module = "androidx.activity:activity-compose", version.ref = "compose_activity" }
 compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose_runtime" }
 compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose_ui" }
@@ -63,7 +64,6 @@ accompanist = { module = "com.google.accompanist:accompanist-systemuicontroller"
 view-pager = { module = 'com.google.accompanist:accompanist-pager', version.ref = "accompanist_viewpager"}
 rxjava = { module = 'io.reactivex.rxjava2:rxjava', version.ref = "rxjava" }
 preferences-datastore = "androidx.datastore:datastore-preferences:1.0.0"
-kotlin-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
 #rxjava-android = { module = 'io.reactivex.rxjava3:rxandroid', version.ref = "rxjava_android"}
 
 [bundles]

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -22,17 +23,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.dirror.lyricviewx.LyricViewX
+import com.dirror.lyricviewx.OnPlayClickListener
 import com.example.androidbooknomy.R
 import com.example.androidbooknomy.model.music.MusicItem
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerControlView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class MusicBottomSheetDialog : BottomSheetDialogFragment() {
-
     private lateinit var musicItem: MusicItem
     private lateinit var exoPlayer: ExoPlayer
+    private lateinit var playerView: PlayerControlView
+    private lateinit var lyricsView: LyricViewX
+    private var isPaused = false
+    private var position = 0L
 
     companion object {
         const val TAG = "ModalBottomSheet"
@@ -64,6 +71,19 @@ class MusicBottomSheetDialog : BottomSheetDialogFragment() {
                 exoPlayer.play()
             }
 
+        exoPlayer.addListener(object : Player.Listener {
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                super.onIsPlayingChanged(isPlaying)
+                if (isPlaying) {
+                    isPaused = false
+                    playerView.postDelayed({ position = exoPlayer.currentPosition }, 200)
+                } else {
+                    isPaused = true
+                    playerView.postDelayed({ position = exoPlayer.currentPosition }, 200)
+                }
+            }
+        })
+
         setContent {
             MainScreen(musicItem = musicItem)
         }
@@ -76,13 +96,18 @@ class MusicBottomSheetDialog : BottomSheetDialogFragment() {
 
     @Composable
     fun MainScreen(musicItem: MusicItem) {
-        Box(contentAlignment = Alignment.Center) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .background(Color.Red)
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.bg_media_player),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),
                 contentDescription = null
             )
+
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 NetworkImage(url = musicItem.photo.imgUrl)
                 Text(
@@ -96,17 +121,43 @@ class MusicBottomSheetDialog : BottomSheetDialogFragment() {
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(10.dp)
                 )
+                AndroidView(
+                    modifier = Modifier
+                        .padding(bottom = 85.dp, top = 15.dp)
+                        .background(Color.Transparent),
+                    factory = {
+                        LyricViewX(requireContext()).apply {
+                            lyricsView = this
+                            lyricsView.loadLyricByUrl(lyricUrl = musicItem.fileText.fileUrl)
+                            lyricsView.setNormalTextSize(20F)
+                            lyricsView.setCurrentTextSize(25F)
+                            lyricsView.setDraggable(true, object : OnPlayClickListener {
+                                override fun onPlayClick(time: Long): Boolean {
+                                    lyricsView.updateTime(position)
+                                    return true
+                                }
+                            })
+                            fun lyricUpdateLoop() {
+                                lyricsView.updateTime(position)
+                                if (!isPaused) { position += 200L }
+                                lyricsView.postDelayed({ lyricUpdateLoop() }, 200)
+                            }
+                            lyricsView.postDelayed({
+                                lyricUpdateLoop()
+                            }, 1000)
+                        }
+                    })
             }
-            AndroidView(factory = {
+            AndroidView(modifier = Modifier
+                .background(Color(R.color.dark_blue))
+                .align(Alignment.BottomStart), factory = {
                 PlayerControlView(requireContext()).apply {
-                    this.player = exoPlayer
-                    this.showTimeoutMs = 0
+                    playerView = this
+                    playerView.player = exoPlayer
+                    playerView.showTimeoutMs = 0
                 }
-            }, modifier = Modifier.align(Alignment.BottomStart))
+            })
         }
-//            Column(Modifier.verticalScroll(rememberScrollState())) {
-//                Text(text = musicItem.fileText.fileUrl)
-//            }
     }
 
     override fun onDestroyView() {

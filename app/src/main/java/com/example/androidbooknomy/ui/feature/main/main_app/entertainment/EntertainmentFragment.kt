@@ -66,10 +66,7 @@ class EntertainmentFragment : Fragment() {
                     EntertainmentScreen {
                         when (it) {
                             0 -> {
-                                FilmsScreen(
-                                    state = viewModel.state.value,
-                                    onFilmClicked = { filmModel -> openFragmentInActivity(AboutMovieFragment.newInstance(filmModel)) }
-                                )
+                                FilmsScreen(state = viewModel.state.value, onFilmClicked = { filmModel -> openFragmentInActivity(AboutMovieFragment.newInstance(filmModel)) })
                             }
                             1 -> { GamesScreen()  }
                             2 -> {

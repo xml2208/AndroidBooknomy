@@ -38,17 +38,21 @@ class PaymentViewModel(private val apiClient: ApiClient) :
         )
 
     private suspend fun getAllBooks() {
-        bookListResponse.value = apiClient.getBooks()
-        for (i in bookListResponse.value!!.booksList) {
-            setState {
-                copy(
-                    title = i.title,
-                    price = i.price,
-                    salePrice = i.salePrice,
-                    salePercent = i.salePercent,
-                    economyPrice = i.economyPrice
-                )
+        try {
+            bookListResponse.value = apiClient.getBooks()
+            for (i in bookListResponse.value!!.booksList) {
+                setState {
+                    copy(
+                        title = i.title,
+                        price = i.price,
+                        salePrice = i.salePrice,
+                        salePercent = i.salePercent,
+                        economyPrice = i.economyPrice
+                    )
+                }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

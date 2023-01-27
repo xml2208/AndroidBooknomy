@@ -30,7 +30,7 @@
     <string name="chance_for_learning_any_time">Istalgan vaqt va istalgan joyda o\'rganish imkoniyati</string>
     <string name="days_for_learning">Kun eshitish va kitobdan kuzattib borish orqali tillarda erkin va avtomatiik gapirish</string>
     <string name="listening_hours_in_day">Kuniga 2,3 soat eshitish va kitobdan kuzatish kifoya</string>
-    <string name="facts_in_numbers">\"Faktlar sonlarda:  \"</string>
+    <string name="facts_in_numbers"> Faktlar sonlarda: </string>
     <string name="cost_of_audio_course">Audio kurs narxi:</string>
     <string name="promotion_40_percent">40% chegirmada:</string>
     <string name="economy_price">Tejab qolasiz:</string>

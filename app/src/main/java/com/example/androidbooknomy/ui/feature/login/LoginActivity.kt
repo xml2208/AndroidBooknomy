@@ -5,10 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.androidbooknomy.R
 import com.example.androidbooknomy.data.storage.Prefs
-import com.example.androidbooknomy.databinding.ActivityLoginBinding
 import com.example.androidbooknomy.ui.feature.main.MainActivity
 import org.koin.android.ext.android.inject
 
