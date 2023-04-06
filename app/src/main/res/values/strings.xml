@@ -35,4 +35,8 @@
     <string name="promotion_40_percent">40% chegirmada:</string>
     <string name="economy_price">Tejab qolasiz:</string>
     <string name="buy_button">Sotib olish</string>
+    <string name="unauthorized">Unauthorized!</string>
+    <string name="phone_num_hint">+998 12 345 67 89</string>
+    <string name="code">code</string>
+    <string name="go_btn">GO</string>
 </resources>

@@ -19,10 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="75dp"
         android:gravity="bottom"
-        android:backgroundTint="@color/bottom_bar_item_bcg"
-        app:itemIconTint="@color/bottom_bar_item_bcg"
-        app:itemBackground="@color/white"
+        android:background="@drawable/bottom_nav_item_selected_color"
         app:labelVisibilityMode="unlabeled"
-
         app:menu="@menu/bottom_bar_menu"/>
+<!--    app:itemBackground="@drawable/bottom_nav_item_selected_color"-->
 </LinearLayout>

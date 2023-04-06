@@ -53,6 +53,7 @@ class EntertainmentFragment : Fragment() {
     private val tabData = listOf(TabData.KINOLAR.name, TabData.OYINLAR.name, TabData.MUSIQA.name)
     private lateinit var film: FilmModel
     private val viewModel by viewModel<EntertainmentViewModel>()
+    private var albumId = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,9 +69,13 @@ class EntertainmentFragment : Fragment() {
                             0 -> {
                                 FilmsScreen(state = viewModel.state.value, onFilmClicked = { filmModel -> openFragmentInActivity(AboutMovieFragment.newInstance(filmModel)) })
                             }
-                            1 -> { GamesScreen()  }
+                            1 -> { GamesScreen() }
                             2 -> {
-                                MusicAlbumScreen(state = viewModel.state.value, onAlbumSelected = { openFragmentInActivity(MusicListFragment()) })
+                                MusicAlbumScreen(state = viewModel.state.value, onAlbumSelected = {
+                                    Log.d("bonu", "onCreateView: ${it.id}")
+//                                    Toast.makeText(requireContext(), it.id, Toast.LENGTH_SHORT).show()
+                                    openFragmentInActivity(MusicListFragment.newInstance(it.id))
+                                })
                             }
                         }
                     }
@@ -178,10 +183,10 @@ class EntertainmentFragment : Fragment() {
                     modifier = Modifier
                         .padding(2.dp)
                         .clickable {
-//                            albumId = albumItem.id
+                            albumId = albumItem.id
+//                            Toast.makeText(ctx, albumItem.id, Toast.LENGTH_SHORT).show()
                             onAlbumSelected(albumItem)
                         }
-
                 )
             }
         }

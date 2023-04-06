@@ -121,7 +121,6 @@ fun ExampleCanvas() {
     }
 }
 
-
 @Composable
 fun ExampleBezier() {
     Canvas(

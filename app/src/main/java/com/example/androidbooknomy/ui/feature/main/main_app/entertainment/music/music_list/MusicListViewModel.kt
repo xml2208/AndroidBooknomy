@@ -1,5 +1,6 @@
 package com.example.androidbooknomy.ui.feature.main.main_app.entertainment.music.music_list
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.example.androidbooknomy.model.music.MusicListResponse
 import com.example.androidbooknomy.network.ApiClient
@@ -11,6 +12,7 @@ class MusicListViewModel(private val api: ApiClient) :
     BaseViewModel<MusicListContract.MusicListState, MusicListContract.MusicListEvent, MusicListContract.MusicListEffect>() {
 
     private val musicListResponse = MutableStateFlow<MusicListResponse?>(null)
+    var albumId = mutableStateOf(0)
 
     init {
         viewModelScope.launch {
@@ -29,10 +31,13 @@ class MusicListViewModel(private val api: ApiClient) :
             }
         }
     }
+    fun albumId(aId: Int) {
+        albumId.value = aId
+    }
 
     private suspend fun getAllMusic() {
         try {
-            musicListResponse.value = api.getMusicById()
+            musicListResponse.value = api.getMusicById(albumId = 6)
             setState {
                 copy(musicList = musicListResponse.value?.musicList ?: emptyList())
             }

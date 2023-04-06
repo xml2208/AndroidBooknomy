@@ -1,6 +1,7 @@
 package com.example.androidbooknomy.ui.feature.main.main_app.entertainment.music.music_list
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,7 +31,6 @@ import com.example.androidbooknomy.model.music.MusicItem
 import com.example.androidbooknomy.model.music.MusicPhoto
 import com.example.androidbooknomy.ui.base.BaseViewModel
 import com.example.androidbooknomy.ui.base.ComposeFragment
-import com.example.androidbooknomy.ui.feature.main.main_app.entertainment.film.PlayerView
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -61,6 +61,8 @@ class MusicListFragment :
     @Composable
     override fun FragmentContent() {
         albumId = arguments?.getInt(ALBUM_ID) ?: 0
+        Log.d("bonu", "album: $albumId")
+        viewModel.albumId(albumId)
         MusicListScreen(viewModel.viewState.value, onEventSent = { viewModel.setEvent(it) })
     }
 

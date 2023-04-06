@@ -30,5 +30,5 @@ interface ApiClient {
     suspend fun getMusicAlbum(): MusicAlbumsResponse
 
     @GET("audio")
-    suspend fun getMusicById(@Query("include") include: String = "music,photo,file_text", @Query("filter[album_id]") albumId: Int = 6): MusicListResponse
+    suspend fun getMusicById(@Query("include") include: String = "music,photo,file_text", @Query("filter[album_id]") albumId: Int): MusicListResponse
 }

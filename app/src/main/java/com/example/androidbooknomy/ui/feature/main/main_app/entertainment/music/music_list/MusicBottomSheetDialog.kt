@@ -19,9 +19,14 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.lifecycleScope
+import coil.ImageLoader
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.dirror.lyricviewx.LyricViewX
 import com.dirror.lyricviewx.OnPlayClickListener
@@ -32,6 +37,8 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerControlView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MusicBottomSheetDialog : BottomSheetDialogFragment() {
     private lateinit var musicItem: MusicItem
@@ -40,7 +47,6 @@ class MusicBottomSheetDialog : BottomSheetDialogFragment() {
     private lateinit var lyricsView: LyricViewX
     private var isPaused = false
     private var position = 0L
-
     companion object {
         const val TAG = "ModalBottomSheet"
         fun newInstance(musicItem: MusicItem): MusicBottomSheetDialog {
@@ -60,6 +66,7 @@ class MusicBottomSheetDialog : BottomSheetDialogFragment() {
 
         musicItem = arguments?.getParcelable("musicItem")!!
 
+        lifecycleScope.launch(context = Dispatchers.IO) { }
         exoPlayer = ExoPlayer.Builder(context)
             .build()
             .also { exoPlayer ->
@@ -119,7 +126,15 @@ class MusicBottomSheetDialog : BottomSheetDialogFragment() {
                     text = musicItem.author,
                     color = Color.Gray,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(bottom = 10.dp)
+                )
+//                Image(painter = painterResource(id = R.drawable.splash_girl), contentScale = null, modifier = Modifier.size(50.dp))
+                Image(
+                    painter = painterResource(id = R.drawable.splash_girl),
+                    modifier = Modifier
+                        .width(200.dp)
+                        .height(60.dp),
+                    contentDescription = null
                 )
                 AndroidView(
                     modifier = Modifier
@@ -139,7 +154,9 @@ class MusicBottomSheetDialog : BottomSheetDialogFragment() {
                             })
                             fun lyricUpdateLoop() {
                                 lyricsView.updateTime(position)
-                                if (!isPaused) { position += 200L }
+                                if (!isPaused) {
+                                    position += 200L
+                                }
                                 lyricsView.postDelayed({ lyricUpdateLoop() }, 200)
                             }
                             lyricsView.postDelayed({
@@ -176,7 +193,30 @@ fun NetworkImage(url: String) {
         modifier = Modifier
             .padding(10.dp)
             .clip(RoundedCornerShape(10.dp))
-            .size(height = 280.dp, width = 200.dp),
+            .size(height = 260.dp, width = 180.dp),
         contentDescription = null
     )
+}
+
+@Composable
+fun GifView(modifier: Modifier) {
+    val context = LocalContext.current
+    val imageLoader = ImageLoader.Builder(context)
+        .components {
+            add(ImageDecoderDecoder.Factory())
+        }
+        .build()
+    Image(
+        painter = rememberAsyncImagePainter(
+            model = ImageRequest.Builder(context).data(data = R.drawable.audio).build(),
+            imageLoader = imageLoader
+        ),
+        contentDescription = null
+    )
+}
+
+@Preview
+@Composable
+fun MusicDialogPreview() {
+
 }
