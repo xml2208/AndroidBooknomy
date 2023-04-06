@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
@@ -30,8 +29,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
 import com.example.androidbooknomy.R
+import com.example.androidbooknomy.analytics.AnalyticsUseCase
+import com.example.androidbooknomy.analytics.AnalyticsUseCaseImpl
 import com.example.androidbooknomy.data.storage.Prefs
 import com.example.androidbooknomy.ui.feature.main.MainActivity
+import com.example.androidbooknomy.utils.extension.toast
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -40,6 +42,7 @@ class RegisterActivity : AppCompatActivity() {
 
     private val viewModel by viewModel<RegistrationViewModel>()
     private val prefs by inject<Prefs>()
+    private val analytics by inject<AnalyticsUseCase>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +59,11 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         observeEffects()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        analytics
     }
 
     private fun observeEffects() {
@@ -83,8 +91,10 @@ class RegisterActivity : AppCompatActivity() {
                     try {
                         viewModel.saveToken(viewModel.phoneNumber, viewModel.code)
                         Log.d("xml", "token: ${prefs.token}")
-                        Toast.makeText(this@RegisterActivity, prefs.token, Toast.LENGTH_SHORT)
-                            .show()
+                        toast(prefs.token)
+                        analytics.log(AnalyticsUseCaseImpl.LOG_IN_EVENT) {
+                            param("isLogged", prefs.isLoggedIn.toString())
+                        }
                         if (prefs.isLoggedIn) {
                             startActivity(MainActivity.getStartIntent(this@RegisterActivity))
                         }
@@ -94,7 +104,6 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
         }
-
     }
 
     @Composable
@@ -106,8 +115,7 @@ class RegisterActivity : AppCompatActivity() {
         onCodeChanged: (String) -> Unit,
         showCodeTextField: Boolean,
         onEventSent: (event: RegistrationContract.Event) -> Unit,
-    )
-    {
+    ) {
         Column {
             Box(Modifier.weight(1f)) {
                 Image(
@@ -122,9 +130,7 @@ class RegisterActivity : AppCompatActivity() {
                     modifier = Modifier
                         .padding(10.dp)
                         .clickable {
-                            onEventSent(
-                                RegistrationContract.Event.NavigateUp
-                            )
+                            onEventSent(RegistrationContract.Event.NavigateUp)
                         },
                     tint = Color.White
                 )
@@ -158,7 +164,7 @@ class RegisterActivity : AppCompatActivity() {
                             onValueChange = onPhoneNumberChanged,
                             value = phoneNumber,
                             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Phone),
-                            placeholder = { Text(text = "+998 12 345 67 89") },
+                            placeholder = { Text(text = stringResource(R.string.phone_num_hint)) },
                             maxLines = 1
                         )
                         if (showCodeTextField) {
@@ -169,7 +175,7 @@ class RegisterActivity : AppCompatActivity() {
                                     modifier = Modifier
                                         .padding(vertical = 20.dp)
                                         .weight(4f),
-                                    placeholder = { Text(text = "code") },
+                                    placeholder = { Text(text = stringResource(R.string.code)) },
                                     maxLines = 1
                                 )
                                 TextButton(
@@ -180,7 +186,10 @@ class RegisterActivity : AppCompatActivity() {
                                         .weight(1f)
                                         .align(Alignment.CenterVertically)
                                 ) {
-                                    Text(text = "GO", fontWeight = FontWeight.Bold)
+                                    Text(
+                                        text = stringResource(R.string.go_btn),
+                                        fontWeight = FontWeight.Bold
+                                    )
                                 }
                             }
                         }

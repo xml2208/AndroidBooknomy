@@ -2,6 +2,7 @@ plugins {
     alias libs.plugins.android.application
     alias libs.plugins.kotlin.android
     alias libs.plugins.kotlin.serialization.plugin
+    alias libs.plugins.google.services
     id 'kotlin-android-extensions'
 }
 
@@ -71,6 +72,12 @@ dependencies {
     implementation libs.compose.theme
     implementation libs.exo.player
     implementation libs.compose.view.binding
+    implementation libs.coil.gif
+
+    //firebase
+    implementation platform(libs.firebase)
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+//    implementation libs.firebase.core
 
     //picasso
     implementation libs.picasso
@@ -80,14 +87,11 @@ dependencies {
     implementation libs.logging.interceptor
     implementation libs.gson
 
-//    implementation 'com.github.jeancsanchez:JcPlayer:2.7.2'
     //rxjava
     implementation libs.rxjava
-//    implementation libs.rxjava.android
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
-
 
     //lyricsView
     implementation 'com.github.Moriafly:LyricViewX:1.2.1'

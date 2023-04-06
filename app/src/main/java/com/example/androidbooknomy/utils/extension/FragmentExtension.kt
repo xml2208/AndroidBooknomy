@@ -9,15 +9,18 @@ import com.example.androidbooknomy.data.storage.Prefs
 import com.example.androidbooknomy.ui.feature.login.RegisterActivity
 import com.example.androidbooknomy.ui.feature.main.MainActivity
 
+fun Activity.toast(text: String) = Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+
 fun Fragment.openFragmentInActivity(fragment: Fragment) {
     (activity as MainActivity).replaceFragment(fragment, R.id.main_activity_fragment)
 }
+
 fun Fragment.openPaymentFragment(fragment: Fragment, prefs: Prefs) {
     if (prefs.isLoggedIn) {
         (activity as MainActivity).replaceFragment(fragment, R.id.main_activity_fragment)
     } else {
-        Toast.makeText(context, "Unauthorized!", Toast.LENGTH_SHORT).show()
-        ContextCompat.startActivity(requireContext(),RegisterActivity.getStartIntent(requireContext()), null)
+        Toast.makeText(context, getString(R.string.unauthorized), Toast.LENGTH_SHORT).show()
+        ContextCompat.startActivity(requireContext(), RegisterActivity.getStartIntent(requireContext()),null)
     }
 }
 
