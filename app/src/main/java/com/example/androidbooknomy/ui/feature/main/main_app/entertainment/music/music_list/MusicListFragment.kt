@@ -2,7 +2,6 @@ package com.example.androidbooknomy.ui.feature.main.main_app.entertainment.music
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,24 +24,23 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.androidbooknomy.R
-import com.example.androidbooknomy.model.music.FileText
-import com.example.androidbooknomy.model.music.Music
+import com.example.androidbooknomy.cicirone.Screens
 import com.example.androidbooknomy.model.music.MusicItem
-import com.example.androidbooknomy.model.music.MusicPhoto
-import com.example.androidbooknomy.ui.base.BaseViewModel
 import com.example.androidbooknomy.ui.base.ComposeFragment
-import org.koin.androidx.viewmodel.ext.android.getViewModel
+import com.example.androidbooknomy.utils.extension.handleBackPressedEvent
+import com.github.terrakok.cicerone.Router
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 const val ALBUM_ID = "album_id"
 
 class MusicListFragment :
-    ComposeFragment<MusicListContract.MusicListState, MusicListContract.MusicListEvent, MusicListContract.MusicListEffect>() {
+    ComposeFragment<MusicListContract.MusicListState, MusicListContract.MusicListEvent>() {
 
+    private val router: Router by inject()
     private var albumId: Int = 0
     private val viewModel by viewModel<MusicListViewModel>()
-    private var selectedMusic: MusicItem =
-        MusicItem(0, "", MusicPhoto(""), "", FileText("", ""), Music("", ""))
+    private var selectedMusic: MusicItem = MusicItem()
 
     companion object {
         fun newInstance(id: Int): MusicListFragment {
@@ -55,33 +53,21 @@ class MusicListFragment :
         }
     }
 
-    override fun retrieveViewModel(): BaseViewModel<MusicListContract.MusicListState, MusicListContract.MusicListEvent, MusicListContract.MusicListEffect> =
-        getViewModel<MusicListViewModel>()
-
     @Composable
     override fun FragmentContent() {
         albumId = arguments?.getInt(ALBUM_ID) ?: 0
-        Log.d("bonu", "album: $albumId")
+        Log.d("xml", "album: $albumId")
         viewModel.albumId(albumId)
-        MusicListScreen(viewModel.viewState.value, onEventSent = { viewModel.setEvent(it) })
+        MusicListScreen(viewModel.viewState.value)
     }
 
-    override fun handleEffect(effect: MusicListContract.MusicListEffect) {
-        super.handleEffect(effect)
-        val bottomSheet = MusicBottomSheetDialog.newInstance(selectedMusic)
-        when (effect) {
-            MusicListContract.MusicListEffect.PlayMusic -> {
-                Toast.makeText(requireContext(), selectedMusic.music.title, Toast.LENGTH_SHORT)
-                    .show()
-                bottomSheet.show(childFragmentManager, MusicBottomSheetDialog.TAG)
-            }
-        }
+    override fun onBackPressed() {
+       handleBackPressedEvent { router.navigateTo(Screens.mainFragmentWithEntertainmentSelected()) }
     }
 
     @Composable
     fun MusicListScreen(
         state: MusicListContract.MusicListState,
-        onEventSent: (MusicListContract.MusicListEvent) -> Unit,
     ) {
         Box {
             Image(
@@ -98,7 +84,7 @@ class MusicListFragment :
                             .padding(start = 10.dp)
                             .clickable {
                                 selectedMusic = music
-                                onEventSent(MusicListContract.MusicListEvent.OnMusicClicked(music))
+                                MusicBottomSheetDialog.newInstance(selectedMusic).show(childFragmentManager, MusicBottomSheetDialog.TAG)
                             }
                     )
                 }

@@ -2,16 +2,21 @@ package com.example.androidbooknomy.ui.feature.main.main_app.home
 
 import  android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.example.androidbooknomy.cicirone.Screens
+import com.example.androidbooknomy.model.BookModel
 import com.example.androidbooknomy.model.BooksModel
 import com.example.androidbooknomy.ui.base.BaseViewModel
+import com.example.androidbooknomy.ui.feature.main.main_app.home.payment.PaymentScreenFragment
+import com.github.terrakok.cicerone.Router
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class HomeScreenViewModel(
-    private val booksRepo: MainAppRepository
-) : BaseViewModel<HomeScreenContract.State, HomeScreenContract.Event, HomeScreenContract.Effect>() {
+    private val booksRepo: MainAppRepository,
+    private val router: Router,
+) : BaseViewModel<HomeScreenContract.State, HomeScreenContract.Event>() {
 
     lateinit var disposable: Disposable
     private val responseBooks = MutableStateFlow<BooksModel?>(null)
@@ -33,22 +38,21 @@ class HomeScreenViewModel(
     override fun handleEvents(event: HomeScreenContract.Event) {
         for (i in responseBooks.value!!.booksList) {
             when (event) {
-                HomeScreenContract.Event.SeeNewsClicked -> setEffect {
-                    HomeScreenContract.Effect.Navigation.MoveToAllNewsScreen
+                HomeScreenContract.Event.SeeNewsClicked -> {
+                    router.navigateTo(Screens.newsFragment())
                 }
-                HomeScreenContract.Event.SeeAllBooksClicked -> setEffect {
-                    HomeScreenContract.Effect.Navigation.MoveToBooksScreen
+                HomeScreenContract.Event.SeeAllBooksClicked -> {
+                    router.navigateTo(Screens.mainFragmentWithBooksSelected())
                 }
-                HomeScreenContract.Event.SeeAudioCoursesClicked -> setEffect {
-                    HomeScreenContract.Effect.Navigation.MoveToBookPaymentScreen
-                }
-                HomeScreenContract.Event.SeeBookClicked(i) -> setEffect {
-                    HomeScreenContract.Effect.Navigation.MoveToBookPaymentScreen
-                }
+                HomeScreenContract.Event.SeeAudioCoursesClicked -> { }
                 else -> {}
             }
 
         }
+    }
+
+    fun bookItemClicked(bookModel: BookModel) {
+        router.navigateTo(Screens.paymentFragment(PaymentScreenFragment.newInstance(bookModel)))
     }
 
     private suspend fun getAllBooks() {
@@ -72,7 +76,6 @@ class HomeScreenViewModel(
 
     private fun getBooksListObserver(): Observer<BooksModel> {
         return object : Observer<BooksModel> {
-
             override fun onSubscribe(d: Disposable) {
                 disposable = d
             }

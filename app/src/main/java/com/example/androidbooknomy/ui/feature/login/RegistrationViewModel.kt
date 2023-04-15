@@ -1,17 +1,24 @@
 package com.example.androidbooknomy.ui.feature.login
 
+import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewModelScope
+import com.example.androidbooknomy.analytics.AnalyticsUseCase
+import com.example.androidbooknomy.analytics.AnalyticsUseCaseImpl
+import com.example.androidbooknomy.cicirone.Screens
 import com.example.androidbooknomy.data.storage.Prefs
 import com.example.androidbooknomy.network.ApiClient
 import com.example.androidbooknomy.ui.base.BaseViewModel
+import com.github.terrakok.cicerone.Router
 import kotlinx.coroutines.launch
 
 class RegistrationViewModel(
     private val apiClient: ApiClient,
-    private val prefs: Prefs
+    private val prefs: Prefs,
+    private val router: Router,
+    private val analytics: AnalyticsUseCase
 ) :
-    BaseViewModel<RegistrationContract.State, RegistrationContract.Event, RegistrationContract.Effect>() {
+    BaseViewModel<RegistrationContract.State, RegistrationContract.Event>() {
 
     var phoneNumber by mutableStateOf("")
 
@@ -36,6 +43,7 @@ class RegistrationViewModel(
         code = codeSms
     }
 
+
     override fun setInitialState(): RegistrationContract.State = RegistrationContract.State(
         phoneNumber = "",
         code = null,
@@ -45,13 +53,27 @@ class RegistrationViewModel(
     override fun handleEvents(event: RegistrationContract.Event) {
         when (event) {
             RegistrationContract.Event.NavigateUp -> {
-                setEffect { RegistrationContract.Effect.Navigation.Back }
-            }
-            RegistrationContract.Event.GoButtonClicked -> {
-                setEffect { RegistrationContract.Effect.Navigation.MoveToApp }
+                router.exit()
             }
             RegistrationContract.Event.RegisterButtonClicked -> {
-                setEffect { RegistrationContract.Effect.SendCodeToPhone }
+                try {
+                    sendSmsToPhone()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            RegistrationContract.Event.GoButtonClicked -> {
+                try {
+                    saveToken(phoneNumber, code)
+                    Log.d("xml", "token: ${prefs.token}")
+                    Log.d("xml", "token: ${prefs.isLoggedIn}")
+                    if (prefs.isLoggedIn) {
+                        router.navigateTo(Screens.mainActivity())
+                    }
+                    analytics.log(AnalyticsUseCaseImpl.LOG_IN_EVENT) { param("isLogged", prefs.isLoggedIn.toString()) }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
     }
@@ -76,6 +98,7 @@ class RegistrationViewModel(
             }
         }
     }
+
 //    fun checkCodeIsValid() {
 //        try {
 //            viewModelScope.launch {

@@ -27,13 +27,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import com.example.androidbooknomy.R
+import com.example.androidbooknomy.utils.extension.handleBackPressedEvent
+import com.github.terrakok.cicerone.Router
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class UserLibraryFragment : Fragment() {
+
+    private val router by inject<Router>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,6 +46,7 @@ class UserLibraryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View = ComposeView(requireContext()).apply {
         setContent {
+            handleBackPressedEvent { router.exit() }
             UserLibraryScreen()
         }
     }

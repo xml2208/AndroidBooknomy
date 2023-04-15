@@ -1,7 +1,6 @@
 package com.example.androidbooknomy.ui.feature.main.main_app.home
 
 import com.example.androidbooknomy.model.BookModel
-import com.example.androidbooknomy.ui.base.CoreEffect
 import com.example.androidbooknomy.ui.base.CoreEvent
 import com.example.androidbooknomy.ui.base.CoreState
 
@@ -11,7 +10,6 @@ class HomeScreenContract {
         object SeeNewsClicked: Event()
         object SeeAllBooksClicked: Event()
         object SeeAudioCoursesClicked: Event()
-        data class SeeBookClicked(val bookModel: BookModel): Event()
     }
 
     data class State(
@@ -20,11 +18,4 @@ class HomeScreenContract {
         val errorMessage: String? = null
     ): CoreState
 
-    sealed class Effect: CoreEffect {
-        sealed class Navigation: Effect() {
-            object MoveToBooksScreen: Navigation()
-            object MoveToAllNewsScreen: Navigation()
-            object MoveToBookPaymentScreen: Navigation()
-        }
-    }
 }

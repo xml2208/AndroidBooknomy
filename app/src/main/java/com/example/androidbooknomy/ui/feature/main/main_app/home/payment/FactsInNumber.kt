@@ -39,7 +39,7 @@ fun FactsInNumber(
     LaunchedEffect(key1 = currentNumber) {
         if (currentNumber < 180) {
             delay(20L)
-            currentNumber ++
+            currentNumber++
         }
     }
 
@@ -129,7 +129,7 @@ fun ExampleBezier() {
             .size(200.dp)
     ) {
         val path = Path().apply {
-              cubicTo(
+            cubicTo(
                 x1 = 0F, y1 = size.height,
                 x2 = size.width.times(-0.2F), y2 = size.height.times(1.1F),
                 x3 = size.width, y3 = size.height.times(0.8F)

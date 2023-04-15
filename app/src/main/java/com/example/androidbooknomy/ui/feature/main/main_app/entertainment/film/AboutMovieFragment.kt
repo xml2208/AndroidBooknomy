@@ -28,16 +28,20 @@ import androidx.fragment.app.Fragment
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.androidbooknomy.R
+import com.example.androidbooknomy.cicirone.Screens
 import com.example.androidbooknomy.model.FilmModel
 import com.example.androidbooknomy.model.SingleFilm
 import com.example.androidbooknomy.model.SingleImage
-import com.example.androidbooknomy.utils.extension.openFragmentInActivity
+import com.example.androidbooknomy.utils.extension.handleBackPressedEvent
+import com.github.terrakok.cicerone.Router
+import org.koin.android.ext.android.inject
 
 const val FILM_ID = "film_id"
 
 class AboutMovieFragment : Fragment() {
 
     private lateinit var filmModel: FilmModel
+    private val router by inject<Router>()
 
     companion object {
         fun newInstance(filmModel: FilmModel): AboutMovieFragment {
@@ -55,12 +59,12 @@ class AboutMovieFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ) = ComposeView(requireContext()).apply {
-
+        handleBackPressedEvent { router.navigateTo(Screens.mainFragmentWithEntertainmentSelected()) }
         filmModel = arguments?.getParcelable(FILM_ID)!!
 
         setContent {
             AboutMovieScreen(filmModel) {
-                openFragmentInActivity(PlayMovie.newInstance(filmModel.films.filmUrl))
+                router.navigateTo(Screens.playMovieFragment(filmModel))
             }
         }
     }
@@ -70,8 +74,7 @@ class AboutMovieFragment : Fragment() {
         filmModel: FilmModel,
         playMovie: () -> Unit
     ) {
-        Box() {
-
+        Box {
             Column(
                 modifier = Modifier
                     .fillMaxSize()

@@ -3,7 +3,6 @@ package com.example.androidbooknomy.ui.feature.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
@@ -27,22 +26,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.lifecycleScope
 import com.example.androidbooknomy.R
-import com.example.androidbooknomy.analytics.AnalyticsUseCase
-import com.example.androidbooknomy.analytics.AnalyticsUseCaseImpl
-import com.example.androidbooknomy.data.storage.Prefs
-import com.example.androidbooknomy.ui.feature.main.MainActivity
-import com.example.androidbooknomy.utils.extension.toast
-import kotlinx.coroutines.launch
+import com.github.terrakok.cicerone.Navigator
+import com.github.terrakok.cicerone.NavigatorHolder
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class RegisterActivity : AppCompatActivity() {
 
     private val viewModel by viewModel<RegistrationViewModel>()
-    private val prefs by inject<Prefs>()
-    private val analytics by inject<AnalyticsUseCase>()
+    private val navigator: Navigator by inject { parametersOf(this) }
+    private val navHolder: NavigatorHolder by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,55 +52,17 @@ class RegisterActivity : AppCompatActivity() {
                 showCodeTextField = viewModel.showCodeField,
                 onEventSent = { viewModel.setEvent(it) })
         }
-
-        observeEffects()
     }
 
     override fun onResume() {
         super.onResume()
-        analytics
+        navHolder.setNavigator(navigator)
     }
 
-    private fun observeEffects() {
-        lifecycleScope.launch {
-            viewModel.effect.collect {
-                handleEffect(it)
-            }
-        }
+    override fun onPause() {
+        super.onPause()
+        navHolder.removeNavigator()
     }
-
-    private fun handleEffect(effect: RegistrationContract.Effect) {
-        when (effect) {
-            RegistrationContract.Effect.Navigation.Back -> {}
-            RegistrationContract.Effect.SendCodeToPhone -> {
-                lifecycleScope.launch {
-                    try {
-                        viewModel.sendSmsToPhone()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-            }
-            RegistrationContract.Effect.Navigation.MoveToApp -> {
-                lifecycleScope.launch {
-                    try {
-                        viewModel.saveToken(viewModel.phoneNumber, viewModel.code)
-                        Log.d("xml", "token: ${prefs.token}")
-                        toast(prefs.token)
-                        analytics.log(AnalyticsUseCaseImpl.LOG_IN_EVENT) {
-                            param("isLogged", prefs.isLoggedIn.toString())
-                        }
-                        if (prefs.isLoggedIn) {
-                            startActivity(MainActivity.getStartIntent(this@RegisterActivity))
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-            }
-        }
-    }
-
     @Composable
     private fun RegistrationUi(
         phoneNumber: String,
@@ -220,6 +177,9 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     companion object {
-        fun getStartIntent(context: Context): Intent = Intent(context, RegisterActivity::class.java)
+        fun getStartIntent(context: Context): Intent =
+            Intent(context, RegisterActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            }
     }
 }

@@ -5,11 +5,10 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-abstract class BaseViewModel<UiState: CoreState, Event: CoreEvent, Effect: CoreEffect, >: ViewModel() {
+abstract class BaseViewModel<UiState: CoreState, Event: CoreEvent>: ViewModel() {
 
     abstract fun setInitialState(): UiState
     abstract fun handleEvents(event: Event)
@@ -20,9 +19,6 @@ abstract class BaseViewModel<UiState: CoreState, Event: CoreEvent, Effect: CoreE
     val viewState: State<UiState> = _viewState
 
     private val _event: MutableSharedFlow<Event> = MutableSharedFlow()
-
-    private val _effect: Channel<Effect> = Channel()
-    val effect: Flow<Effect> = _effect.receiveAsFlow()
 
     init {
         subscribeToEvents()
@@ -48,10 +44,5 @@ abstract class BaseViewModel<UiState: CoreState, Event: CoreEvent, Effect: CoreE
             e.printStackTrace()
         }
 
-    }
-
-    protected fun setEffect(builder: () -> Effect) {
-        val effectValue = builder()
-        viewModelScope.launch { _effect.send(effectValue) }
     }
 }

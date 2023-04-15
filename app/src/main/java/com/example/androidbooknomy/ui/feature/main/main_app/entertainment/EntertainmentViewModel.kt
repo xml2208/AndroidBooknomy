@@ -8,16 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.androidbooknomy.network.ApiClient
 import kotlinx.coroutines.launch
 
-class EntertainmentViewModel(private val api: ApiClient) : ViewModel() {
+class EntertainmentViewModel(
+    private val api: ApiClient
+    ) : ViewModel() {
 
-    private val _state: MutableState<EntertainmentScreenState> = mutableStateOf(
-        EntertainmentScreenState(
-            EntertainmentScreenState.FilmsState(emptyList()),
-            EntertainmentScreenState.MusicAlbumState(
-                emptyList()
-            )
-        )
-    )
+    private val _state: MutableState<EntertainmentScreenState> = mutableStateOf(EntertainmentScreenState())
     val state: State<EntertainmentScreenState> = _state
 
     init {

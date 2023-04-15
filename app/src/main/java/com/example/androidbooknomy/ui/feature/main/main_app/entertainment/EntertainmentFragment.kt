@@ -30,18 +30,19 @@ import androidx.fragment.app.*
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.androidbooknomy.R
+import com.example.androidbooknomy.cicirone.Screens
 import com.example.androidbooknomy.model.FilmModel
 import com.example.androidbooknomy.model.music.MusicAlbumItem
 import com.example.androidbooknomy.ui.feature.main.AppTopScreen
-import com.example.androidbooknomy.ui.feature.main.main_app.entertainment.film.AboutMovieFragment
 import com.example.androidbooknomy.ui.feature.main.main_app.entertainment.games.GamesScreen
-import com.example.androidbooknomy.ui.feature.main.main_app.entertainment.music.music_list.MusicListFragment
-import com.example.androidbooknomy.utils.extension.openFragmentInActivity
+import com.example.androidbooknomy.utils.extension.handleBackPressedEvent
+import com.github.terrakok.cicerone.Router
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.android.synthetic.main.entertainment_fragment.*
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 enum class TabData {
@@ -54,6 +55,13 @@ class EntertainmentFragment : Fragment() {
     private lateinit var film: FilmModel
     private val viewModel by viewModel<EntertainmentViewModel>()
     private var albumId = 0
+    private val router by inject<Router>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        handleBackPressedEvent { router.exit() }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,15 +75,19 @@ class EntertainmentFragment : Fragment() {
                     EntertainmentScreen {
                         when (it) {
                             0 -> {
-                                FilmsScreen(state = viewModel.state.value, onFilmClicked = { filmModel -> openFragmentInActivity(AboutMovieFragment.newInstance(filmModel)) })
+                                FilmsScreen(
+                                    state = viewModel.state.value,
+                                    onFilmClicked = { filmModel -> router.navigateTo(Screens.aboutMovieFragment(filmModel)) }
+                                )
                             }
                             1 -> { GamesScreen() }
                             2 -> {
-                                MusicAlbumScreen(state = viewModel.state.value, onAlbumSelected = {
-                                    Log.d("bonu", "onCreateView: ${it.id}")
-//                                    Toast.makeText(requireContext(), it.id, Toast.LENGTH_SHORT).show()
-                                    openFragmentInActivity(MusicListFragment.newInstance(it.id))
-                                })
+                                MusicAlbumScreen(
+                                    state = viewModel.state.value,
+                                    onAlbumSelected = { albumItem ->
+                                        Log.d("bonu", "onCreateView: ${albumItem.id}")
+                                        router.navigateTo(Screens.musicListFragment(albumItem))
+                                    })
                             }
                         }
                     }
@@ -207,5 +219,11 @@ class EntertainmentFragment : Fragment() {
             )
             Text(text = musicAlbumItem.title, fontWeight = FontWeight.Bold)
         }
+    }
+
+    companion object {
+//        fun newInstance(): EntertainmentFragment {
+//            return
+//        }
     }
 }

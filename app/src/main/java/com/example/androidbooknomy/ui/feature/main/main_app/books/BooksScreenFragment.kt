@@ -1,7 +1,5 @@
 package com.example.androidbooknomy.ui.feature.main.main_app.books
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -24,24 +22,21 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.androidbooknomy.R
-import com.example.androidbooknomy.data.storage.Prefs
+import com.example.androidbooknomy.cicirone.Screens
 import com.example.androidbooknomy.model.BookModel
 import com.example.androidbooknomy.ui.base.ComposeFragment
 import com.example.androidbooknomy.ui.feature.main.AppTopScreen
-import com.example.androidbooknomy.ui.feature.main.main_app.home.payment.PaymentScreenFragment
-import com.example.androidbooknomy.utils.extension.openPaymentFragment
+import com.example.androidbooknomy.utils.extension.handleBackPressedEvent
+import com.github.terrakok.cicerone.Router
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BooksScreenFragment :
-    ComposeFragment<BooksScreenContract.BooksScreenState, BooksScreenContract.Event, BooksScreenContract.Effect>() {
+    ComposeFragment<BooksScreenContract.BooksScreenState, BooksScreenContract.Event>() {
 
     private val viewModel by viewModel<BooksScreenViewModel>()
-    private val prefs by inject<Prefs>()
     private lateinit var bookModel: BookModel
-
-    override fun retrieveViewModel() = getViewModel<BooksScreenViewModel>()
+    private val router by inject<Router>()
 
     @Composable
     override fun FragmentContent() {
@@ -51,21 +46,8 @@ class BooksScreenFragment :
         )
     }
 
-    override fun handleEffect(effect: BooksScreenContract.Effect) {
-        super.handleEffect(effect)
-        when (effect) {
-            BooksScreenContract.Effect.Navigation.OpenAudioBooksScreen -> {
-                Toast.makeText(requireContext(), "Open audio books screen", Toast.LENGTH_SHORT).show()
-                Log.d("xml", "BooksScreen: open audio screen triggered")
-            }
-            BooksScreenContract.Effect.Navigation.MoveToPaymentScreen -> {
-                openPaymentFragment(PaymentScreenFragment.newInstance(bookModel), prefs)
-                Log.d("xml", "list: ${viewModel.viewState.value.bookList.size}")
-            }
-            BooksScreenContract.Effect.Navigation.OpenIntensiveBooksScreen -> {
-                Toast.makeText(requireContext(), "Open intensive book screen", Toast.LENGTH_SHORT).show()
-            }
-        }
+    override fun onBackPressed() {
+        handleBackPressedEvent { router.navigateTo(Screens.mainFragment()) }
     }
 
     @Composable
@@ -117,7 +99,7 @@ class BooksScreenFragment :
                             .padding(6.dp)
                             .clickable {
                                 bookModel = it
-                                onEventSent(BooksScreenContract.Event.OnBookItemClicked(bookModel))
+                                viewModel.onBookItemClicked(bookModel)
                             },
                         bookModel = it,
                         imageWidth = 120.dp, imageHeight = 200.dp
@@ -139,7 +121,8 @@ fun BookItem(
 ) {
     Column(modifier = modifier) {
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current).placeholder(R.drawable.bg_audio).data(bookModel.photo.photoUrl).build(),
+            model = ImageRequest.Builder(LocalContext.current).placeholder(R.drawable.bg_audio)
+                .data(bookModel.photo.photoUrl).build(),
             modifier = Modifier
                 .size(width = imageWidth, height = imageHeight)
                 .clip(RoundedCornerShape(8.dp)),

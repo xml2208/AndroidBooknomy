@@ -9,7 +9,7 @@
     tools:context=".ui.feature.main.MainFragment">
 
     <FrameLayout
-        android:id="@+id/main_fragment_container"
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

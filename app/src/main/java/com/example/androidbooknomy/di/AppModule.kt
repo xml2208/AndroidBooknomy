@@ -1,7 +1,10 @@
 package com.example.androidbooknomy.di
 
+import androidx.fragment.app.FragmentActivity
+import com.example.androidbooknomy.R
 import com.example.androidbooknomy.analytics.AnalyticsUseCaseImpl
 import com.example.androidbooknomy.analytics.AnalyticsUseCase
+import com.example.androidbooknomy.cicirone.BooknomyAppNavigator
 import com.example.androidbooknomy.data.storage.Prefs
 import com.example.androidbooknomy.network.*
 import com.example.androidbooknomy.ui.feature.login.RegistrationViewModel
@@ -10,7 +13,9 @@ import com.example.androidbooknomy.ui.feature.main.main_app.entertainment.Entert
 import com.example.androidbooknomy.ui.feature.main.main_app.entertainment.music.music_list.MusicListViewModel
 import com.example.androidbooknomy.ui.feature.main.main_app.home.MainAppRepository
 import com.example.androidbooknomy.ui.feature.main.main_app.home.HomeScreenViewModel
-import com.example.androidbooknomy.ui.feature.main.main_app.home.payment.PaymentViewModel
+import com.github.terrakok.cicerone.Cicerone
+import com.github.terrakok.cicerone.Navigator
+import com.github.terrakok.cicerone.Router
 import com.google.firebase.analytics.FirebaseAnalytics
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
@@ -26,6 +31,25 @@ val analyticsModule = module {
     factory<AnalyticsUseCase> { AnalyticsUseCaseImpl(get()) }
 }
 
+val navigationModule = module {
+
+    single { Cicerone.create() }
+
+    factory {
+        get<Cicerone<Router>>().router
+    }
+
+    factory<Navigator> { (activity: FragmentActivity) ->
+        BooknomyAppNavigator(activity, R.id.container)
+    }
+
+    factory {
+        val router = get<Cicerone<Router>>()
+        router.getNavigatorHolder()
+    }
+
+}
+
 val commonsModule = module {
     single { Prefs(get()) }
     single { AuthInterceptor(get()) }
@@ -36,10 +60,9 @@ val reposModule = module {
 }
 
 val viewModels = module {
-    viewModel { RegistrationViewModel(provideApiService(get()), get()) }
-    viewModel { HomeScreenViewModel(get()) }
-    viewModel { BooksScreenViewModel(get()) }
-    viewModel { PaymentViewModel(get()) }
+    viewModel { RegistrationViewModel(provideApiService(get()), get(), get(), get()) }
+    viewModel { HomeScreenViewModel(get(), get()) }
+    viewModel { BooksScreenViewModel(get(), get(), get()) }
     viewModel { MusicListViewModel(get()) }
     viewModel { EntertainmentViewModel(get()) }
 }
@@ -72,4 +95,4 @@ fun provideApiService(retrofit: Retrofit): ApiClient {
     return retrofit.create(ApiClient::class.java)
 }
 
-val allModules = listOf(analyticsModule, commonsModule, networkModule, viewModels, reposModule)
+val allModules = listOf(navigationModule, analyticsModule, commonsModule, networkModule, viewModels, reposModule)

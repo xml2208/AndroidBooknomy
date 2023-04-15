@@ -58,6 +58,9 @@ dependencies {
     implementation libs.bundles.koin
     implementation libs.koin.compose
 
+    //cicerone
+    implementation libs.cicerone
+
     //storage
     implementation libs.preferences.datastore
 
@@ -77,7 +80,7 @@ dependencies {
     //firebase
     implementation platform(libs.firebase)
     implementation 'com.google.firebase:firebase-analytics-ktx'
-//    implementation libs.firebase.core
+    //implementation libs.firebase.core
 
     //picasso
     implementation libs.picasso

@@ -23,58 +23,40 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.androidbooknomy.R
-import com.example.androidbooknomy.data.storage.Prefs
 import com.example.androidbooknomy.model.BookModel
 import com.example.androidbooknomy.ui.base.ComposeFragment
 import com.example.androidbooknomy.ui.feature.main.AppTopScreen
-import com.example.androidbooknomy.ui.feature.main.MainActivity
-import com.example.androidbooknomy.ui.feature.main.MainFragment
 import com.example.androidbooknomy.ui.feature.main.main_app.books.BookItem
-import com.example.androidbooknomy.ui.feature.main.main_app.home.news.NewsFragment
-import com.example.androidbooknomy.utils.extension.replaceFragment
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
-import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import com.example.androidbooknomy.ui.feature.main.main_app.home.payment.PaymentScreenFragment
-import com.example.androidbooknomy.utils.extension.openFragmentInActivity
-import com.example.androidbooknomy.utils.extension.openPaymentFragment
+import com.example.androidbooknomy.utils.extension.handleBackPressedEvent
+import com.github.terrakok.cicerone.Router
 import org.koin.android.ext.android.inject
 
 class HomeScreenFragment :
-    ComposeFragment<HomeScreenContract.State, HomeScreenContract.Event, HomeScreenContract.Effect>() {
+    ComposeFragment<HomeScreenContract.State, HomeScreenContract.Event>() {
 
     private val viewModel by viewModel<HomeScreenViewModel>()
-    private val prefs by inject<Prefs>()
+    private val router by inject<Router>()
     private lateinit var bookModel: BookModel
-    override fun retrieveViewModel() = getViewModel<HomeScreenViewModel>()
 
     @Composable
     override fun FragmentContent() {
-
         HomeScreen(
             state = viewModel.viewState.value,
             onEventSent = { viewModel.setEvent(it) }
         )
     }
 
-    override fun handleEffect(effect: HomeScreenContract.Effect) {
-        super.handleEffect(effect)
-        when (effect) {
-            HomeScreenContract.Effect.Navigation.MoveToBooksScreen -> {
-                openFragmentInActivity(MainFragment.newInstance(R.id.ic_books))
-                Log.d("xml", "HomeScreen: MoveToBooks screen triggered")
-            }
-            HomeScreenContract.Effect.Navigation.MoveToAllNewsScreen -> {
-                (activity as MainActivity).replaceFragment(NewsFragment(), R.id.main_activity_fragment)
-            }
-            HomeScreenContract.Effect.Navigation.MoveToBookPaymentScreen -> {
-                openPaymentFragment(PaymentScreenFragment.newInstance(bookModel), prefs)
-            }
+    override fun onBackPressed() {
+        handleBackPressedEvent {
+            router.exit()
         }
     }
+
     @Composable
     fun HomeScreen(
         state: HomeScreenContract.State,
@@ -169,11 +151,9 @@ class HomeScreenFragment :
                                 modifier = Modifier
                                     .clickable {
                                         bookModel = it
-                                        onEventSent(
-                                            HomeScreenContract.Event.SeeBookClicked(
-                                                bookModel
-                                            )
-                                        )
+//                                        (activity as MainActivity).btn.visibility = View.GONE
+                                        viewModel.bookItemClicked(bookModel)
+                                     //   onEventSent(HomeScreenContract.Event.SeeBookClicked(bookModel))
                                     }
                                     .padding(6.dp),
                                 imageHeight = 140.dp,

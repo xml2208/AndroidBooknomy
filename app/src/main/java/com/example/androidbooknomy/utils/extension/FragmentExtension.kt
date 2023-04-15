@@ -2,28 +2,26 @@ package com.example.androidbooknomy.utils.extension
 
 import android.app.Activity
 import android.widget.Toast
-import androidx.core.content.ContextCompat
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModel
 import com.example.androidbooknomy.R
 import com.example.androidbooknomy.analytics.AnalyticsUseCase
 import com.example.androidbooknomy.analytics.AnalyticsUseCaseImpl
+import com.example.androidbooknomy.cicirone.Screens
 import com.example.androidbooknomy.data.storage.Prefs
-import com.example.androidbooknomy.ui.feature.login.RegisterActivity
-import com.example.androidbooknomy.ui.feature.main.MainActivity
+import com.github.terrakok.cicerone.Router
 
 fun Activity.toast(text: String) = Toast.makeText(this, text, Toast.LENGTH_LONG).show()
 
-fun Fragment.openFragmentInActivity(fragment: Fragment) {
-    (activity as MainActivity).replaceFragment(fragment, R.id.main_activity_fragment)
-}
-
-fun Fragment.openPaymentFragment(fragment: Fragment, prefs: Prefs) {
+fun ViewModel.openPaymentFragment(fragment: Fragment, prefs: Prefs, router: Router) {
     if (prefs.isLoggedIn) {
-        (activity as MainActivity).replaceFragment(fragment, R.id.main_activity_fragment)
+        router.navigateTo(Screens.paymentFragment(fragment))
     } else {
-        Toast.makeText(context, getString(R.string.unauthorized), Toast.LENGTH_SHORT).show()
-        ContextCompat.startActivity(requireContext(), RegisterActivity.getStartIntent(requireContext()),null)
+        Toast.makeText(fragment.requireContext(), R.string.unauthorized, Toast.LENGTH_SHORT).show()
+        router.navigateTo(Screens.registerActivity())
     }
 }
 
@@ -46,4 +44,21 @@ fun FragmentActivity.replaceFragment(
         .replace(containerId, fragment)
         .addToBackStack(null)
         .commit()
+}
+
+fun AppCompatActivity.handleBackPressedEvent(onBack: () -> Unit) {
+    this.onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            onBack()
+        }
+    })
+}
+
+
+fun Fragment.handleBackPressedEvent(onBack: () -> Unit) {
+    this.activity?.onBackPressedDispatcher?.addCallback(object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            onBack()
+        }
+    })
 }

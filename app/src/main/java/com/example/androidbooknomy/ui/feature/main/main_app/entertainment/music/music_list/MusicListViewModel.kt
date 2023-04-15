@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class MusicListViewModel(private val api: ApiClient) :
-    BaseViewModel<MusicListContract.MusicListState, MusicListContract.MusicListEvent, MusicListContract.MusicListEffect>() {
+    BaseViewModel<MusicListContract.MusicListState, MusicListContract.MusicListEvent>() {
 
     private val musicListResponse = MutableStateFlow<MusicListResponse?>(null)
     var albumId = mutableStateOf(0)
@@ -26,7 +26,8 @@ class MusicListViewModel(private val api: ApiClient) :
     override fun handleEvents(event: MusicListContract.MusicListEvent) {
         for (i in musicListResponse.value?.musicList ?: emptyList()) {
             when (event) {
-                MusicListContract.MusicListEvent.OnMusicClicked(i) -> setEffect { MusicListContract.MusicListEffect.PlayMusic }
+                MusicListContract.MusicListEvent.OnMusicClicked(i) -> { }
+//                    setEffect { MusicListContract.MusicListEffect.PlayMusic }
                 else -> {}
             }
         }
